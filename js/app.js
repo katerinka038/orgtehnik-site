@@ -174,7 +174,28 @@
     });
   }
 
-  /* ------------------------------------------------------ 5. Год в подвале */
+  /* ------------------------------------------------------------ 5. Карта
+     Карта Яндекса ставит свои cookie, поэтому грузится только по нажатию.
+     Выбор запоминаем в браузере, чтобы при следующем визите не спрашивать. */
+  var MAP_SRC = 'https://yandex.ru/map-widget/v1/?text=%D0%9E%D0%B1%D0%BD%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9A%D0%BE%D0%BC%D1%81%D0%BE%D0%BC%D0%BE%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F%2C%207&ll=36.601510%2C55.087326&z=17';
+  var MAP_KEY = 'orgtehnik:map';
+  var mapBox = document.getElementById('map');
+  var mapBtn = document.getElementById('map-load');
+
+  function loadMap() {
+    if (!mapBox || mapBox.querySelector('iframe')) return;
+    var frame = document.createElement('iframe');
+    frame.src = MAP_SRC;
+    frame.title = 'Мастерская «Оргтехник» на карте: Обнинск, улица Комсомольская, 7';
+    frame.setAttribute('allowfullscreen', '');
+    mapBox.appendChild(frame);
+    try { localStorage.setItem(MAP_KEY, '1'); } catch (e) { /* хранилище недоступно — спросим снова */ }
+  }
+
+  if (mapBtn) mapBtn.addEventListener('click', loadMap);
+  try { if (localStorage.getItem(MAP_KEY) === '1') loadMap(); } catch (e) { /* без хранилища — по кнопке */ }
+
+  /* ------------------------------------------------------ 6. Год в подвале */
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 })();
